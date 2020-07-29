@@ -1,6 +1,6 @@
 // @flow
 
-import { pointsToLevels, milestoneToPoints, trackIds, totalPointsFromMilestoneMap } from '../constants'
+import {pointsToLevels, milestoneToPoints, trackIds, totalPointsFromMilestoneMap, tracks} from '../constants'
 import type { MilestoneMap } from '../constants'
 import React from 'react'
 
@@ -10,37 +10,34 @@ type Props = {
 
 class PointSummaries extends React.Component<Props> {
   render() {
-    const totalPoints = totalPointsFromMilestoneMap(this.props.milestoneByTrack)
+    debugger;
+    //const totalPoints = totalPointsFromMilestoneMap(this.props.milestoneByTrack)
 
-    let currentLevel, nextLevel
-
-    let pointsForCurrentLevel = totalPoints
-    while (!(currentLevel = pointsToLevels[pointsForCurrentLevel])) {
-      pointsForCurrentLevel--
+    let totalPoints = parseFloat("0");
+    for (const [key, value] of Object.entries(this.props.milestoneByTrack)) {
+      totalPoints = totalPoints + parseFloat(value)
     }
+    let currentLevel;
 
-    let pointsToNextLevel = 1
-    while (!(nextLevel = pointsToLevels[totalPoints + pointsToNextLevel])) {
-      pointsToNextLevel++
-      if (pointsToNextLevel > 135) {
-        pointsToNextLevel = 'N/A'
-        break
-      }
+    let averagePoints = totalPoints/trackIds.length;
+    let decimals = averagePoints - parseInt(averagePoints);
+    let finalPoints = decimals > 0.74 ? Math.ceil(averagePoints) : Math.floor(averagePoints);
+
+    switch (finalPoints) {
+      case 0: currentLevel = "N/A"; break;
+      case 1: currentLevel = "ICT 1"; break;
+      case 2: currentLevel = "ICT 2"; break;
+      case 3: currentLevel = "ICT 3"; break;
+      case 4: currentLevel = "ICT 4"; break;
+      case 5: currentLevel = "ICT 5"; break;
+      default: currentLevel = "N/A"
     }
 
     const blocks = [
       {
-        label: 'Current level',
+        label: 'Assessed level',
         value: currentLevel
       },
-      {
-        label: 'Total points',
-        value: totalPoints
-      },
-      {
-        label: 'Points to next level',
-        value: pointsToNextLevel
-      }
     ]
 
     return (
@@ -49,10 +46,11 @@ class PointSummaries extends React.Component<Props> {
           table {
             border-spacing: 3px;
             margin-bottom: 20px;
-            margin-left: -3px;
+            margin-left: 140px;
+            margin-top: 140px;
           }
           .point-summary-label {
-            font-size: 12px;
+            font-size: 14px;
             text-align: center;
             font-weight: normal;
             width: 120px;

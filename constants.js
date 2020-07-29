@@ -31,10 +31,10 @@ export const milestoneToPoints = (milestone: Milestone): number => {
   switch (milestone) {
     case 0: return 0
     case 1: return 1
-    case 2: return 3
-    case 3: return 6
-    case 4: return 12
-    case 5: return 20
+    case 2: return 1
+    case 3: return 1
+    case 4: return 1
+    case 5: return 1
     default: return 0
   }
 }
@@ -1193,15 +1193,27 @@ export const categoryColorScale = d3.scaleOrdinal()
   .range(['#00abc2', '#428af6', '#e1439f', '#e54552'])
 
 export const titles = [
-  {label: 'Engineer I', minPoints: 0, maxPoints: 16},
-  {label: 'Engineer II', minPoints: 17, maxPoints: 35},
-  {label: 'Senior Engineer', minPoints: 36, maxPoints: 57},
-  {label: 'Group Lead', minPoints: 36, maxPoints: 57},
-  {label: 'Staff Engineer', minPoints: 58, maxPoints: 89},
+  {label: 'ICT 1', minPoints: 0, maxPoints: 16},
+  {label: 'ICT 2', minPoints: 17, maxPoints: 35},
+  {label: 'ICT 3', minPoints: 36, maxPoints: 57},
+  {label: 'ICT 4', minPoints: 36, maxPoints: 57},
+  {label: 'ICT 5', minPoints: 58, maxPoints: 89},
   {label: 'Senior Group Lead', minPoints: 58, maxPoints: 89},
   {label: 'Principal Engineer', minPoints: 90},
   {label: 'Director of Engineering', minPoints: 90}
 ]
+
+export const pointsToTitles = (points: number): number => {
+  switch (points) {
+    case 0: return "N/A"
+    case 1: return "ICT 1"
+    case 2: return "ICT 2"
+    case 3: return "ICT 3"
+    case 4: return "ICT 4"
+    case 5: return "ICT 5"
+    default: return "N/A"
+  }
+}
 
 export const eligibleTitles = (milestoneMap: MilestoneMap): string[] => {
   const totalPoints = totalPointsFromMilestoneMap(milestoneMap)

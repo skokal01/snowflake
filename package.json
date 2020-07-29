@@ -5,10 +5,13 @@
   "repository": "https://github.com/Medium/eng-growth",
   "license": "MIT",
   "dependencies": {
+    "-": "0.0.1",
     "d3": "^4.11.0",
+    "g": "^2.0.1",
     "next": "^9.0.7",
     "react": "^16.10.2",
-    "react-dom": "^16.10.2"
+    "react-dom": "^16.10.2",
+    "yarn": "^1.22.4"
   },
   "scripts": {
     "dev": "next",
