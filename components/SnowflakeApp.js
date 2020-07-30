@@ -265,6 +265,7 @@ class SnowflakeApp extends React.Component<Props, SnowflakeAppState> {
   }
 
   setFocusedTrackId(trackId: TrackId) {
+    console.log(trackId)
     let index = trackIds.indexOf(trackId);
     const focusedTrackId = trackIds[index];
     this.setState({ focusedTrackId });
