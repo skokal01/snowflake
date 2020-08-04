@@ -1,6 +1,6 @@
 // @flow
 
-import React from "react";
+import React, { Fragment } from "react";
 import { trackIds, tracks, categoryColorScale } from "../constants";
 import type { MilestoneMap, TrackId } from "../constants";
 
@@ -10,34 +10,53 @@ type Props = {
   setFocusedTrackIdFn: (TrackId) => void,
 };
 
-const arr = [
-  {
-    label: "Mobile",
-    value: 1,
-  },
-  {
-    label: "Web Client",
-    value: 2,
-  },
-  {
-    label: "Foundations",
-    value: 3,
-  },
-  {
-    label: "Project Management",
-    value: 4,
-  },
-];
+let map = {};
+let bucket_map = {};
 
-class NewTrackSelector extends React.Component<Props> {
+class TrackSelector extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      currentCategory: null,
+    };
+  }
+
+  componentWillMount() {
+    trackIds.map((trackId) => {
+      if (map.hasOwnProperty(trackId)) {
+        map[trackId].push(tracks[trackId]);
+      } else {
+        map[trackId] = [];
+        map[trackId].push(tracks[trackId]);
+      }
+    });
+
+    Object.keys(map).map((s_key) => {
+      if (bucket_map.hasOwnProperty(map[s_key][0].category)) {
+        map[s_key][0].trackId = s_key;
+        bucket_map[map[s_key][0].category].push(map[s_key][0]);
+      } else {
+        bucket_map[map[s_key][0].category] = [];
+        map[s_key][0].trackId = s_key;
+        bucket_map[map[s_key][0].category].push(map[s_key][0]);
+      }
+    });
+  }
+
   render() {
     return (
-      <div style={{ display: "flex", flexGap: 15, maxWidth: "100px" }}>
+      <div>
         <style jsx>{`
-          .value {
+          .track-selector {
+            width: 100%;
+            border-spacing: 3px;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+          }
+          .track-selector-value {
             line-height: 50px;
             width: 50px;
-            padding: 10px;
             text-align: center;
             background: #eee;
             font-weight: bold;
@@ -45,83 +64,69 @@ class NewTrackSelector extends React.Component<Props> {
             border-radius: 3px;
             cursor: pointer;
           }
-          .label {
-            justify-content: center;
-            align-items: flex-start;
+          .track-selector-label {
+            text-align: center;
+            margin-top: 5px;
             font-size: 9px;
           }
-
-          .col {
-            margin-right: 10px;
-          }
-
-          .grid {
-            width: 100%;
+          .bucket {
             display: flex;
           }
         `}</style>
-
-        <div className="grid">
-          {arr.map((a) => {
-            return (
-              <div className="col">
-                <div className="label">{a.label}</div>
-                <div className="value">{a.value}</div>
+        <div>
+          <div className="track-selector" style={{ display: "flex" }}>
+            {Object.keys(bucket_map).map((s_key) => (
+              <div
+                className="bucket"
+                style={{
+                  display: "flex",
+                  padding: "10px 5px",
+                  marginRight: "5px",
+                  borderTop: "4px solid " + categoryColorScale(s_key),
+                  borderLeft: "4px solid " + categoryColorScale(s_key),
+                  borderRight: "4px solid " + categoryColorScale(s_key),
+                }}
+              >
+                {bucket_map[s_key].map((cat, index) => (
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <div
+                      key={`${cat.trackId}-${index}-value`}
+                      className="track-selector-value"
+                      style={{
+                        marginRight: "5px",
+                        border:
+                          "4px solid " +
+                          (cat.trackId == this.props.focusedTrackId
+                            ? "#000"
+                            : categoryColorScale(tracks[cat.trackId].category)),
+                        background: categoryColorScale(
+                          tracks[cat.trackId].category
+                        ),
+                      }}
+                      onClick={() =>
+                        this.props.setFocusedTrackIdFn(cat.trackId)
+                      }
+                    >
+                      {this.props.milestoneByTrack[cat.trackId]}
+                    </div>
+                    <div
+                      key={`${cat.trackId}-${index}-label`}
+                      className="track-selector-label"
+                      onClick={() =>
+                        this.props.setFocusedTrackIdFn(cat.trackId)
+                      }
+                    >
+                      {tracks[cat.trackId].displayName}
+                    </div>
+                  </div>
+                ))}
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
       </div>
-      //   <div style={{ display: "flex" }}>
-      //     <style jsx>{`
-      //       .track-selector-value {
-      //         line-height: 50px;
-      //         width: 50px;
-      //         padding: 10px;
-      //         text-align: center;
-      //         background: #eee;
-      //         font-weight: bold;
-      //         font-size: 24px;
-      //         border-radius: 3px;
-      //         cursor: pointer;
-      //       }
-      //       .track-selector-label {
-      //         justify-content: center;
-      //         align-items: flex-start;
-      //         font-size: 9px;
-      //       }
-      //     `}</style>
-      //     {trackIds.map((trackId) => {
-      //       return (
-      //         <div>
-      //           <div
-      //             key={`label-${trackId}`}
-      //             className="track-selector-label"
-      //             onClick={() => this.props.setFocusedTrackIdFn(trackId)}
-      //           >
-      //             {tracks[trackId].displayName}
-      //           </div>
-      //           <div
-      //             key={`value-${trackId}`}
-      //             className="track-selector-value"
-      //             style={{
-      //               border:
-      //                 "4px solid " +
-      //                 (trackId == this.props.focusedTrackId
-      //                   ? "#000"
-      //                   : categoryColorScale(tracks[trackId].category)),
-      //               background: categoryColorScale(tracks[trackId].category),
-      //             }}
-      //             onClick={() => this.props.setFocusedTrackIdFn(trackId)}
-      //           >
-      //             {this.props.milestoneByTrack[trackId]}
-      //           </div>
-      //         </div>
-      //       );
-      //     })}
-      //   </div>
     );
   }
 }
 
-export default NewTrackSelector;
+export default TrackSelector;

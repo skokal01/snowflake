@@ -203,11 +203,11 @@ class SnowflakeApp extends React.Component<Props, SnowflakeAppState> {
             />
           </div>
         </div>
-        <TrackSelector
+        {/* <TrackSelector
           milestoneByTrack={this.state.milestoneByTrack}
           focusedTrackId={this.state.focusedTrackId}
           setFocusedTrackIdFn={this.setFocusedTrackId.bind(this)}
-        />
+        /> */}
 
         <NewTrackSelector
           milestoneByTrack={this.state.milestoneByTrack}
