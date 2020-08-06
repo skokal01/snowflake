@@ -12,6 +12,12 @@ type Props = {
 
 let map = {};
 let bucket_map = {};
+const category_map = {
+  A: "Team Work",
+  B: "Innovation",
+  C: "Results",
+  D: "Impact",
+};
 
 class TrackSelector extends React.Component<Props> {
   constructor(props: Props) {
@@ -52,6 +58,7 @@ class TrackSelector extends React.Component<Props> {
             border-spacing: 3px;
             border-bottom: 2px solid #ccc;
             padding-bottom: 20px;
+            margin-top: 20px;
             margin-bottom: 20px;
           }
           .track-selector-value {
@@ -72,19 +79,29 @@ class TrackSelector extends React.Component<Props> {
           .bucket {
             display: flex;
           }
+          .category {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 600;
+          }
         `}</style>
-        <div>
-          <div className="track-selector" style={{ display: "flex" }}>
-            {Object.keys(bucket_map).map((s_key) => (
+        <div className="track-selector" style={{ display: "flex" }}>
+          {Object.keys(bucket_map).map((s_key) => (
+            <div>
+              <div className="category">{category_map[s_key]}</div>
               <div
                 className="bucket"
                 style={{
                   display: "flex",
                   padding: "10px 5px",
-                  marginRight: "5px",
+                  marginRight: "10px",
                   borderTop: "4px solid " + categoryColorScale(s_key),
                   borderLeft: "4px solid " + categoryColorScale(s_key),
                   borderRight: "4px solid " + categoryColorScale(s_key),
+                  minHeight: "100px",
                 }}
               >
                 {bucket_map[s_key].map((cat, index) => (
@@ -121,8 +138,8 @@ class TrackSelector extends React.Component<Props> {
                   </div>
                 ))}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
     );
